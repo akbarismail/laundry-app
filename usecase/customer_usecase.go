@@ -98,12 +98,20 @@ func (c *customerUseCase) Update(payload model.Customer) error {
 	if payload.ID == "" {
 		return fmt.Errorf("id is required")
 	}
+
 	if payload.Name == "" {
 		return fmt.Errorf("name is required")
 	}
+
 	if payload.PhoneNumber == "" {
 		return fmt.Errorf("phone number is required")
 	}
+
+	c2, _ := c.repo.FindByPhone(payload.PhoneNumber)
+	if payload.PhoneNumber == c2.PhoneNumber {
+		return fmt.Errorf("phone number has registered")
+	}
+
 	if payload.Address == "" {
 		return fmt.Errorf("address is required")
 	}
