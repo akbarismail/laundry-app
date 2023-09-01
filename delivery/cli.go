@@ -46,6 +46,7 @@ func (c *Console) Run() {
 		case "4":
 			controller.NewEmployeeController(c.employeeUseCase).EmployeeMenuForm()
 		case "5":
+			controller.NewBillController(c.billUseCase)
 		case "6":
 			os.Exit(0)
 		}

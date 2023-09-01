@@ -23,10 +23,10 @@ func (p *ProductController) ProductMenuForm() {
 	`)
 
 	fmt.Print("Choose Menu (1-6): ")
-	var selectMenuUom string
-	fmt.Scanln(&selectMenuUom)
+	var selectMenuProduct string
+	fmt.Scanln(&selectMenuProduct)
 
-	switch selectMenuUom {
+	switch selectMenuProduct {
 	case "1":
 		p.insertFormProduct()
 	case "2":

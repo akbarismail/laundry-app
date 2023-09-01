@@ -23,10 +23,10 @@ func (e *EmployeeController) EmployeeMenuForm() {
 	`)
 
 	fmt.Print("Choose Menu (1-6): ")
-	var selectMenuUom string
-	fmt.Scanln(&selectMenuUom)
+	var selectMenuEmployee string
+	fmt.Scanln(&selectMenuEmployee)
 
-	switch selectMenuUom {
+	switch selectMenuEmployee {
 	case "1":
 		e.insertFormEmployee()
 	case "2":
