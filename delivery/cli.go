@@ -40,6 +40,7 @@ func (c *Console) Run() {
 		case "1":
 			controller.NewUomController(c.uomUseCase).UomMenuForm()
 		case "2":
+			controller.NewProductController(c.productUseCase).ProductMenuForm()
 		case "3":
 			controller.NewCustomerController(c.customerUseCase).CustomerMenuForm()
 		case "4":
