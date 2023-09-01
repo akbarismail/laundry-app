@@ -43,6 +43,7 @@ func (c *Console) Run() {
 		case "3":
 			controller.NewCustomerController(c.customerUseCase).CustomerMenuForm()
 		case "4":
+			controller.NewEmployeeController(c.employeeUseCase).EmployeeMenuForm()
 		case "5":
 		case "6":
 			os.Exit(0)
