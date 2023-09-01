@@ -13,7 +13,7 @@ type ProductController struct {
 
 func (p *ProductController) ProductMenuForm() {
 	fmt.Println(`
-	|		+++++ Master Employee +++++	|
+	|		+++++ Master Product +++++	|
 	| 1. Add Data					|
 	| 2. Show Data					|
 	| 3. Update Data				|
