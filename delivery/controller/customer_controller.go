@@ -42,11 +42,49 @@ func (c *CustomerController) CustomerMenuForm() {
 	}
 }
 
-func (c *CustomerController) showPhoneFormCustomer() {}
+func (c *CustomerController) showPhoneFormCustomer() {
+	var customer model.Customer
+	fmt.Print("Input Phone Number: ")
+	fmt.Scanln(&customer.PhoneNumber)
 
-func (c *CustomerController) deleteFormCustomer() {}
+	c2, err := c.customerUseCase.GetByPhone(customer.PhoneNumber)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
-func (c *CustomerController) updateFormCustomer() {}
+	fmt.Printf("ID: %s, Name: %s, Phone Number: %s, Address: %s\n", c2.ID, c2.Name, c2.PhoneNumber, c2.Address)
+}
+
+func (c *CustomerController) deleteFormCustomer() {
+	var customer model.Customer
+	fmt.Print("Input ID: ")
+	fmt.Scanln(&customer.ID)
+
+	err := c.customerUseCase.Delete(customer.ID)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}
+
+func (c *CustomerController) updateFormCustomer() {
+	var customer model.Customer
+	fmt.Print("Input ID: ")
+	fmt.Scanln(&customer.ID)
+	fmt.Print("Input Name: ")
+	fmt.Scanln(&customer.Name)
+	fmt.Print("Input Phone Number: ")
+	fmt.Scanln(&customer.PhoneNumber)
+	fmt.Print("Input Address: ")
+	fmt.Scanln(&customer.Address)
+
+	err := c.customerUseCase.Update(customer)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}
 
 func (c *CustomerController) showListFormCustomer() {
 	customers, err := c.customerUseCase.GetAll()
