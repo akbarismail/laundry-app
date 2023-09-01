@@ -30,7 +30,7 @@ func (c *Config) ReadConfig() error {
 
 	if c.DbConfig.Host == "" || c.DbConfig.Port == "" || c.DbConfig.Name == "" || c.DbConfig.User == "" || c.DbConfig.Password == "" || c.DbConfig.Driver == "" {
 
-		fmt.Errorf("Missing required environment variable")
+		return fmt.Errorf("missing required environment variable")
 	}
 
 	return nil
