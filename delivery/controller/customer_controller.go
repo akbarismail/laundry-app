@@ -22,7 +22,7 @@ func (c *CustomerController) CustomerMenuForm() {
 	| 6. Exit						|
 	`)
 
-	fmt.Print("Choose Menu (1-6): ")
+	fmt.Print("Choose Menu (1-6) *don't press space keyboard: ")
 	var selectMenuCustomer string
 	fmt.Scanln(&selectMenuCustomer)
 

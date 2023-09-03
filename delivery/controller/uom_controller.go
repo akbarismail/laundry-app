@@ -22,7 +22,7 @@ func (u *UomController) UomMenuForm() {
 	| 6. Exit                       |
 	`)
 
-	fmt.Print("Choose Menu (1-6): ")
+	fmt.Print("Choose Menu (1-6) *don't press space keyboard: ")
 	var selectMenuUom string
 	fmt.Scanln(&selectMenuUom)
 

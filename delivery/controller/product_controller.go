@@ -22,7 +22,7 @@ func (p *ProductController) ProductMenuForm() {
 	| 6. Exit						|
 	`)
 
-	fmt.Print("Choose Menu (1-6): ")
+	fmt.Print("Choose Menu (1-6) *don't press space keyboard: ")
 	var selectMenuProduct string
 	fmt.Scanln(&selectMenuProduct)
 
@@ -48,7 +48,7 @@ func (p *ProductController) insertFormProduct() {
 	fmt.Scanln(&product.ID)
 	fmt.Print("Input Name: ")
 	fmt.Scanln(&product.Name)
-	fmt.Println("Input Price: ")
+	fmt.Print("Input Price: ")
 	fmt.Scanln(&product.Price)
 	fmt.Print("Input Uom ID: ")
 	fmt.Scanln(&product.Uom.ID)
