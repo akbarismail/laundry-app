@@ -27,7 +27,7 @@ func (c *Console) showMainMenu() {
 	| 5. Transaction                |
 	| 6. Exit                       |
 	`)
-	fmt.Print("Choose Menu (1-6): ")
+	fmt.Print("Choose Menu (1-6) *don't press space keyboard: ")
 }
 
 func (c *Console) Run() {
@@ -46,7 +46,7 @@ func (c *Console) Run() {
 		case "4":
 			controller.NewEmployeeController(c.employeeUseCase).EmployeeMenuForm()
 		case "5":
-			controller.NewBillController(c.billUseCase)
+			controller.NewBillController(c.billUseCase).BillMenuForm()
 		case "6":
 			os.Exit(0)
 		}
