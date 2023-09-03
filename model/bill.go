@@ -9,7 +9,6 @@ type Bill struct {
 	FinishDate time.Time
 	Employee   Employee
 	Customer   Customer
-	BillDetail []BillDetail
 }
 
 type BillDetail struct {
