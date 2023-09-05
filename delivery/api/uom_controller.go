@@ -3,15 +3,15 @@ package api
 import (
 	"clean-code/model"
 	"clean-code/usecase"
+	"clean-code/util/common"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type UomController struct {
-	uomUseCase usecase.UomUseCase
-	engine     *gin.Engine
+	uomUseCase  usecase.UomUseCase
+	routerGroup *gin.RouterGroup
 }
 
 func (u *UomController) updateUom(c *gin.Context) {
@@ -65,7 +65,7 @@ func (u *UomController) createUom(c *gin.Context) {
 		return
 	}
 
-	uom.ID = uuid.NewString()
+	uom.ID = common.GenerateID()
 	err := u.uomUseCase.CreateNew(uom)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -116,15 +116,17 @@ func (u *UomController) findUoms(c *gin.Context) {
 	}
 }
 
-func NewUomController(uomUseCase usecase.UomUseCase, engine *gin.Engine) {
-	uomController := UomController{
-		uomUseCase: uomUseCase,
-		engine:     engine,
-	}
+func (u *UomController) Route() {
+	u.routerGroup.PATCH("/uoms/:id", u.updateUom)
+	u.routerGroup.DELETE("/uoms/:id", u.deleteUom)
+	u.routerGroup.GET("/uoms", u.findUoms)
+	u.routerGroup.POST("/uoms", u.createUom)
 
-	rg := engine.Group("/api/v1")
-	rg.PATCH("/uoms/:id", uomController.updateUom)
-	rg.DELETE("/uoms/:id", uomController.deleteUom)
-	rg.GET("/uoms", uomController.findUoms)
-	rg.POST("/uoms", uomController.createUom)
+}
+
+func NewUomController(uomUseCase usecase.UomUseCase, routerGroup *gin.RouterGroup) *UomController {
+	return &UomController{
+		uomUseCase:  uomUseCase,
+		routerGroup: routerGroup,
+	}
 }

@@ -3,24 +3,37 @@ package delivery
 import (
 	"clean-code/config"
 	"clean-code/delivery/api"
-	"clean-code/repository"
-	"clean-code/usecase"
+	"clean-code/delivery/middleware"
+	"clean-code/manager"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type Server struct {
-	uomUseCase usecase.UomUseCase
-	engine     *gin.Engine
+	ucManager manager.UseCaseManager
+	engine    *gin.Engine
+	host      string
+	log       *logrus.Logger
+}
+
+func (s *Server) initMiddleWares() {
+	s.engine.Use(middleware.RequestLogMiddleWare(s.log))
 }
 
 func (s *Server) initControllers() {
-	api.NewUomController(s.uomUseCase, s.engine)
+	routerGroup := s.engine.Group("/api/v1")
+
+	api.NewUomController(s.ucManager.UomUC(), routerGroup).Route()
+	api.NewCustomerController(s.ucManager.CustomerUC(), routerGroup).Route()
+	api.NewEmployeeController(s.ucManager.EmployeeUC(), routerGroup).Route()
 }
 
 func (s *Server) Run() {
-	if err := s.engine.Run(); err != nil {
+	s.initMiddleWares()
+	s.initControllers()
+	if err := s.engine.Run(s.host); err != nil {
 		panic(err)
 	}
 }
@@ -31,23 +44,22 @@ func NewServer() *Server {
 		fmt.Println(err)
 	}
 
-	con, err := config.NewDBConnection(cfg)
+	infraManager, err := manager.NewInfraManager(cfg)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	db := con.Conn()
+	rm := manager.NewRepoManager(infraManager)
+	ucm := manager.NewUseCaseManager(rm)
 
-	uomRepository := repository.NewUomRepository(db)
-
-	uomUseCase := usecase.NewUomUseCase(uomRepository)
-
+	host := fmt.Sprintf("%s:%s", cfg.APIHost, cfg.APIPort)
 	engine := gin.Default()
-	server := Server{
-		uomUseCase: uomUseCase,
-		engine:     engine,
-	}
-	server.initControllers()
+	log := logrus.New()
 
-	return &server
+	return &Server{
+		ucManager: ucm,
+		engine:    engine,
+		host:      host,
+		log:       log,
+	}
 }

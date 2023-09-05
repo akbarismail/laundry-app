@@ -3,6 +3,7 @@ package delivery
 import (
 	"clean-code/config"
 	"clean-code/delivery/controller"
+	"clean-code/manager"
 	"clean-code/repository"
 	"clean-code/usecase"
 	"fmt"
@@ -59,12 +60,12 @@ func NewConsole() *Console {
 		fmt.Println(err)
 	}
 
-	con, err := config.NewDBConnection(cfg)
+	infraManager, err := manager.NewInfraManager(cfg)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	db := con.Conn()
+	db := infraManager.Conn()
 
 	uomRepository := repository.NewUomRepository(db)
 	productRepository := repository.NewProductRepository(db)
