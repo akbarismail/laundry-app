@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"clean-code/model"
+	"clean-code/model/dto"
 	"clean-code/repository"
 	"fmt"
 )
@@ -13,10 +14,16 @@ type UomUseCase interface {
 	GetByName(name string) ([]model.Uom, error)
 	Update(payload model.Uom) error
 	Delete(id string) error
+	Paging(payload dto.PageRequest) ([]model.Uom, dto.Paging, error)
 }
 
 type uomUseCase struct {
 	repo repository.UomRepository
+}
+
+// Paging implements UomUseCase.
+func (u *uomUseCase) Paging(payload dto.PageRequest) ([]model.Uom, dto.Paging, error) {
+	return u.repo.Paging(payload)
 }
 
 // GetByName implements UomUseCase.

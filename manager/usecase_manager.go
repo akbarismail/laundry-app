@@ -8,10 +8,22 @@ type UseCaseManager interface {
 	EmployeeUC() usecase.EmployeeUseCase
 	ProductUC() usecase.ProductUseCase
 	UomUC() usecase.UomUseCase
+	AuthUC() usecase.AuthUseCase
+	UserUC() usecase.UserUseCase
 }
 
 type useCaseManager struct {
 	repoManager RepoManager
+}
+
+// AuthUC implements UseCaseManager.
+func (u *useCaseManager) AuthUC() usecase.AuthUseCase {
+	return usecase.NewAuthUseCase(u.repoManager.UserRepo())
+}
+
+// UserUC implements UseCaseManager.
+func (u *useCaseManager) UserUC() usecase.UserUseCase {
+	return usecase.NewUserUseCase(u.repoManager.UserRepo())
 }
 
 // BillUC implements UseCaseManager.

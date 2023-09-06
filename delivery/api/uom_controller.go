@@ -1,10 +1,13 @@
 package api
 
 import (
+	"clean-code/delivery/middleware"
 	"clean-code/model"
+	"clean-code/model/dto"
 	"clean-code/usecase"
 	"clean-code/util/common"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -80,47 +83,32 @@ func (u *UomController) createUom(c *gin.Context) {
 }
 
 func (u *UomController) findUoms(c *gin.Context) {
-	name := c.Query("name")
-	if name == "" {
-		u2, err := u.uomUseCase.GetAll()
-		if err != nil {
-			c.JSON(http.StatusBadGateway, gin.H{
-				"message": err.Error(),
-				"data":    u2,
-			})
-			return
-		}
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	size, _ := strconv.Atoi(c.DefaultQuery("size", "5"))
 
-		c.JSON(http.StatusOK, gin.H{
-			"message": "successfully",
-			"data":    u2,
+	rows, paging, err := u.uomUseCase.Paging(dto.PageRequest{
+		Page: page,
+		Size: size,
+	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": err.Error(),
 		})
-		return
-
-	} else {
-		u2, err := u.uomUseCase.GetByName(name)
-		if err != nil {
-			c.JSON(http.StatusBadGateway, gin.H{
-				"message": err.Error(),
-				"data":    u2,
-			})
-			return
-		}
-
-		c.JSON(http.StatusOK, gin.H{
-			"message": "successfully",
-			"data":    u2,
-		})
-
 		return
 	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "successfully get uoms",
+		"data":    rows,
+		"paging":  paging,
+	})
 }
 
 func (u *UomController) Route() {
-	u.routerGroup.PATCH("/uoms/:id", u.updateUom)
-	u.routerGroup.DELETE("/uoms/:id", u.deleteUom)
-	u.routerGroup.GET("/uoms", u.findUoms)
-	u.routerGroup.POST("/uoms", u.createUom)
+	u.routerGroup.PATCH("/uoms/:id", middleware.AuthMiddleWare(), u.updateUom)
+	u.routerGroup.DELETE("/uoms/:id", middleware.AuthMiddleWare(), u.deleteUom)
+	u.routerGroup.GET("/uoms", middleware.AuthMiddleWare(), u.findUoms)
+	u.routerGroup.POST("/uoms", middleware.AuthMiddleWare(), u.createUom)
 
 }
 

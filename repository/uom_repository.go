@@ -2,7 +2,9 @@ package repository
 
 import (
 	"clean-code/model"
+	"clean-code/model/dto"
 	"database/sql"
+	"math"
 )
 
 type UomRepository interface {
@@ -12,10 +14,49 @@ type UomRepository interface {
 	FindByName(name string) ([]model.Uom, error)
 	UpdateById(uom model.Uom) error
 	DeleteById(id string) error
+	Paging(payload dto.PageRequest) ([]model.Uom, dto.Paging, error)
 }
 
 type uomRepository struct {
 	db *sql.DB
+}
+
+// Paging implements UomRepository.
+func (u *uomRepository) Paging(payload dto.PageRequest) ([]model.Uom, dto.Paging, error) {
+	if payload.Page <= 0 {
+		payload.Page = 1
+	}
+	// (page - 1) * size
+	r, err := u.db.Query("SELECT id, name FROM uom LIMIT $2 OFFSET $1", (payload.Page-1)*payload.Size, payload.Size)
+	if err != nil {
+		return nil, dto.Paging{}, err
+	}
+
+	defer r.Close()
+	var uoms []model.Uom
+	var uom model.Uom
+
+	for r.Next() {
+		if err = r.Scan(&uom.ID, &uom.Name); err != nil {
+			return nil, dto.Paging{}, err
+		}
+		uoms = append(uoms, uom)
+	}
+
+	var count int
+	r2 := u.db.QueryRow("SELECT COUNT(id) FROM uom")
+	if err = r2.Scan(&count); err != nil {
+		return nil, dto.Paging{}, err
+	}
+
+	paging := dto.Paging{
+		Page:       payload.Page,
+		Size:       payload.Size,
+		TotalRows:  count,
+		TotalPages: int(math.Ceil(float64(count) / float64(payload.Size))),
+	}
+
+	return uoms, paging, nil
 }
 
 // FindByName implements UomRepository.

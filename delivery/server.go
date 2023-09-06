@@ -28,6 +28,7 @@ func (s *Server) initControllers() {
 	api.NewUomController(s.ucManager.UomUC(), routerGroup).Route()
 	api.NewCustomerController(s.ucManager.CustomerUC(), routerGroup).Route()
 	api.NewEmployeeController(s.ucManager.EmployeeUC(), routerGroup).Route()
+	api.NewAuthController(s.ucManager.AuthUC(), s.ucManager.UserUC(), routerGroup).Route()
 }
 
 func (s *Server) Run() {
