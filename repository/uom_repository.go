@@ -23,9 +23,6 @@ type uomRepository struct {
 
 // Paging implements UomRepository.
 func (u *uomRepository) Paging(payload dto.PageRequest) ([]model.Uom, dto.Paging, error) {
-	if payload.Page <= 0 {
-		payload.Page = 1
-	}
 	// (page - 1) * size
 	r, err := u.db.Query("SELECT id, name FROM uom LIMIT $2 OFFSET $1", (payload.Page-1)*payload.Size, payload.Size)
 	if err != nil {

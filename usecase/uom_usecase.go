@@ -23,6 +23,9 @@ type uomUseCase struct {
 
 // Paging implements UomUseCase.
 func (u *uomUseCase) Paging(payload dto.PageRequest) ([]model.Uom, dto.Paging, error) {
+	if payload.Page <= 0 {
+		payload.Page = 1
+	}
 	return u.repo.Paging(payload)
 }
 

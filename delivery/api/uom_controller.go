@@ -5,7 +5,6 @@ import (
 	"clean-code/model"
 	"clean-code/model/dto"
 	"clean-code/usecase"
-	"clean-code/util/common"
 	"net/http"
 	"strconv"
 
@@ -68,7 +67,7 @@ func (u *UomController) createUom(c *gin.Context) {
 		return
 	}
 
-	uom.ID = common.GenerateID()
+	// uom.ID = common.GenerateID()
 	err := u.uomUseCase.CreateNew(uom)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

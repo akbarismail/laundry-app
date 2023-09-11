@@ -110,6 +110,11 @@ func (p *productUseCase) Update(payload model.Product) error {
 		return fmt.Errorf("id uom is not found")
 	}
 
+	_, err = p.GetById(payload.ID)
+	if err != nil {
+		return err
+	}
+
 	err = p.repo.UpdateById(payload)
 	if err != nil {
 		return fmt.Errorf("failed to update product: %v", err)

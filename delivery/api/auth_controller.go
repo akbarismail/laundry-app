@@ -14,6 +14,13 @@ type AuthController struct {
 	rg          *gin.RouterGroup
 }
 
+// AuthController godoc
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Param        Body body dto.AuthRequest  true  "Auth login"
+// @Success      201  {object}  dto.AuthRequest
+// @Router       /auth/login [post]
 func (a *AuthController) login(c *gin.Context) {
 	var authReq dto.AuthRequest
 	if err := c.ShouldBindJSON(&authReq); err != nil {
@@ -31,12 +38,19 @@ func (a *AuthController) login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusCreated, gin.H{
 		"message": "successfully login",
 		"data":    authRes,
 	})
 }
 
+// AuthController godoc
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Param        Body body dto.AuthRequest  true  "Auth register"
+// @Success      201  {object}  string
+// @Router       /auth/register [post]
 func (a *AuthController) register(c *gin.Context) {
 	var authReq dto.AuthRequest
 	if err := c.ShouldBindJSON(&authReq); err != nil {
@@ -53,7 +67,7 @@ func (a *AuthController) register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusCreated, gin.H{
 		"message": "successfully register",
 	})
 }
